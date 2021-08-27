@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expenses/widgets/user_transaction.dart';
+import 'package:personal_expenses/widgets/new_transaction.dart';
+import 'package:personal_expenses/widgets/transaction_list.dart';
+
+import 'modules/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,10 +21,49 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   // late String titleInput, amountInput;
-  // final titlecontroller = TextEditingController();
-  // final amountcontroller = TextEditingController();
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransaction = [
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Grocessories',
+      amount: 16.53,
+      date: DateTime.now(),
+    )
+  ];
+
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+        title: txTitle,
+        amount: txAmount,
+        date: DateTime.now(),
+        id: DateTime.now().toString());
+    setState(() {
+      _userTransaction.add(newTx);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return GestureDetector(child: Newtransaction(_addNewTransaction),
+          onTap: (){},
+          behavior: HitTestBehavior.opaque,);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +71,9 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Expenses Tracker'),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+          IconButton(onPressed: () {
+            _startAddNewTransaction(context);
+          }, icon: Icon(Icons.add)),
         ],
       ),
       body: SingleChildScrollView(
@@ -45,14 +89,14 @@ class MyHomePage extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-            UserTransaction(),
+            Transaction_list(_userTransaction),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () => {_startAddNewTransaction(context)},
       ),
     );
   }
