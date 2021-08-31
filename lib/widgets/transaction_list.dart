@@ -6,7 +6,9 @@ import '../modules/transaction.dart';
 class Transaction_list extends StatelessWidget {
   final List<Transaction> transaction;
 
-  Transaction_list(this.transaction);
+  final Function deleteTx;
+
+  Transaction_list(this.transaction,this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,9 @@ class Transaction_list extends StatelessWidget {
                   'No transactions added yet!',
                   style: Theme.of(context).textTheme.title,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 80,
+                ),
                 Container(
                     height: 200,
                     child: Image.asset(
@@ -31,39 +35,27 @@ class Transaction_list extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.4),
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          '₹ ${transaction[index].amount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transaction[index].title,
-                            style: Theme.of(context).textTheme.title,
-                          ),
-                          Text(
-                            DateFormat.yMMMd().format(transaction[index].date),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      )
-                    ],
+                  elevation: 2,
+                  margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                          padding: EdgeInsets.all(6),
+                          child: FittedBox(
+                              child: Text('₹ ${transaction[index].amount}'))),
+                    ),
+                    title: Text(
+                      transaction[index].title,
+                      style: Theme.of(context).appBarTheme.textTheme!.title,
+                    ),
+                    subtitle: Text(
+                        DateFormat.yMMMd().format(transaction[index].date)),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                      onPressed: () => deleteTx(transaction[index].id),
+                    ),
                   ),
                 );
               },
