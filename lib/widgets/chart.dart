@@ -31,7 +31,7 @@ class Chart extends StatelessWidget {
   }
 
   double get totalSpending {
-    return groupedTransactionValues.fold(0.0, (sum, item){
+    return groupedTransactionValues.fold(0.0, (sum, item) {
       return sum + (item['amount'] as double);
     });
   }
@@ -50,7 +50,8 @@ class Chart extends StatelessWidget {
             return Flexible(
               fit: FlexFit.tight,
               child: ChartBar(data['day'] as String, data['amount'] as double,
-                  totalSpending==0.0? 0.0:(data['amount'] as double) / totalSpending),
+                  totalSpending == 0.0 ? 0.0 : (data['amount'] as double) /
+                      totalSpending),
             );
           }).toList(),
         ),
